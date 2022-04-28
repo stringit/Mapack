@@ -36,14 +36,14 @@ jobs:
     - name: Connect Nuget source
       run: dotnet nuget add source --username stringit-app --password ${{ secrets.READ_PACKAGE_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/stringit/index.json
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore source/Mapack.sln
     - name: Build
-      run: dotnet build --no-restore -c Release
+      run: dotnet build source/Mapack.sln --no-restore -c Release
     - name: Test
-      run: dotnet test -c Release --no-build --verbosity normal
+      run: dotnet test source/Mapack.sln -c Release --no-build --verbosity normal
     - name: Pack
       if: github.event_name != 'pull_request'
-      run: dotnet pack -c Release --no-build -o package
+      run: dotnet pack source/Mapack.sln -c Release --no-build -o package
     - name: Push generated package to GitHub registry
       if: github.event_name != 'pull_request'
       run: dotnet nuget push ./package/*.nupkg --source https://nuget.pkg.github.com/stringit/index.json --api-key ${{ github.token }} --skip-duplicate
